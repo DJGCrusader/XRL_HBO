@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+	<arg name="config" default="hbo" doc="rviz config file name in gbo/rviz" />
+
+	<!-- launch rviz -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find gigatron)/rviz/$(arg config).rviz" output="screen" />
+
+</launch>

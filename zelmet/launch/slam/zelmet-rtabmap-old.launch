@@ -1,0 +1,180 @@
+
+<launch>
+ 
+  <!-- Choose visualization -->
+  <arg name="rviz"                    default="false" />
+  <arg name="rtabmapviz"              default="false" /> 
+  
+  <!-- Corresponding config files -->
+  <arg name="rtabmapviz_cfg"          default="-d $(find rtabmap_ros)/launch/config/rgbd_gui.ini" />
+  <arg name="rviz_cfg"                default="-d $(find rtabmap_ros)/launch/config/rgbd.rviz" />
+  
+  <arg name="frame_id"                default="base_link"/>   <!-- Fixed frame id, you may set "base_link" or "base_footprint" if they are published -->
+  <arg name="time_threshold"          default="0"/>             <!-- (ms) If not 0 ms, memory management is used to keep processing time on this fixed limit. -->
+  <arg name="optimize_from_last_node" default="false"/>         <!-- Optimize the map from the last node. Should be true on multi-session mapping and when time threshold is set -->
+  <arg name="database_path"           default="~/.ros/rtabmap.db"/>
+  <arg name="rtabmap_args"            default="--delete_db_on_start"/>              <!-- delete_db_on_start, udebug -->
+  <arg name="launch_prefix"           default=""/>              <!-- for debugging purpose, it fills launch-prefix tag of the nodes -->
+   
+  <arg name="rgb_topic"               default="/zelmet/zed/rgb/image_rect_color" />
+  <arg name="depth_registered_topic"  default="/zelmet/zed/depth/image_rect_color" />
+  <arg name="camera_info_topic"       default="/zelmet/zed/rgb/camera_info" />
+  <arg name="compressed"              default="false"/>
+  <arg name="convert_depth_to_mm"     default="true"/>
+
+  <param name="subscribe_depth" type="bool" value="true"/>   
+  <arg name="subscribe_scan"          default="false"/>         <!-- Assuming 2D scan if set, rtabmap will do 3DoF mapping instead of 6DoF -->
+  <arg name="scan_topic"              default="/scan"/>
+  
+  <arg name="visual_odometry"         default="false"/>          <!-- Generate visual odometry -->
+  <arg name="odom_topic"              default="/odom"/>         <!-- Odometry topic used if visual_odometry is false -->
+  <arg name="namespace"               default="rtabmap"/>
+  <arg name="wait_for_transform"            default="0.1"/>
+
+  <!-- Odometry parameters: -->
+  <arg name="strategy"            default="0" />       <!-- Strategy: 0=BOW (bag-of-words) 1=Optical Flow -->
+  <arg name="feature"             default="2" />       <!-- Feature type: 0=SURF 1=SIFT 2=ORB 3=FAST/FREAK 4=FAST/BRIEF 5=GFTT/FREAK 6=GFTT/BRIEF 7=BRISK -->
+  <arg name="estimation"          default="0" />       <!-- Motion estimation approach: 0:3D->3D, 1:3D->2D (PnP) -->
+  <arg name="nn"                  default="1" />       <!-- Nearest neighbor strategy : 0=Linear, 1=FLANN_KDTREE (SIFT, SURF), 2=FLANN_LSH, 3=BRUTEFORCE (ORB/FREAK/BRIEF/BRISK) -->
+  <arg name="max_depth"           default="5" />       <!-- Maximum features depth (m) -->
+  <arg name="min_inliers"         default="1" />      <!-- Minimum visual correspondences to accept a transformation (m) -->
+  <arg name="inlier_distance"     default="0.1" />     <!-- RANSAC maximum inliers distance (m) -->
+  <arg name="local_map"           default="999" />    <!-- Local map size: number of unique features to keep track -->
+  <arg name="variance_inliers"    default="true"/>    <!-- Variance from inverse of inliers count -->  
+
+
+  <!-- Added for mapping --> 
+  <arg name="cloud_max_depth"               default="8.0" /> <!-- maximum depth of cloud to build map from -->
+  <arg name="cloud_floor_culling_height"        default="0.0" /> <!-- filter the floor at the specificed height -->
+  <arg name="grid_eroded"               default="true" /> <!-- filter obstacle cells surrounded by empty space -->
+  <arg name="grid_unknown_space_filled"         default="false" /> <!-- fill empty space on lidar map -->
+  <arg name="proj_max_ground_angle"             default="60.0" /> <!-- Maximum angle (degrees) between point's normal to ground's normal to label it as ground. Points with higher angle difference are considered as obstacles -->
+  <arg name="proj_min_cluster_size"             default="50" /> <!-- Minimum cluster size to project the points. The distance between clusters is defined by 2*grid_cell_size. -->
+  <arg name="proj_max_height"               default="1.2" /> <!-- Maximum height of points used for projection. -->
+     
+
+  <!-- Nodes -->
+  <group ns="$(arg namespace)">
+
+    <node if="$(arg compressed)" name="republish_rgb" type="republish" pkg="image_transport" args="compressed in:=$(arg rgb_topic) raw out:=$(arg rgb_topic)" />
+    <node if="$(arg compressed)" name="republish_depth" type="republish" pkg="image_transport" args="compressedDepth in:=$(arg depth_registered_topic) raw out:=$(arg depth_registered_topic)" />
+  
+    <!-- RGBD Odometry -->
+    <node if="$(arg visual_odometry)" pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen" launch-prefix="$(arg launch_prefix)">
+
+      <remap from="rgb/image"       to="$(arg rgb_topic)"/>
+      <remap from="depth/image"     to="$(arg depth_registered_topic)"/>
+      <remap from="rgb/camera_info" to="$(arg camera_info_topic)"/>
+
+       <param name="publish_tf" type="bool" value="false"/> <!-- Dont publish a odom->base_link tf, robot_localization will do that -->
+
+      <param name="frame_id"                  type="string"   value="$(arg frame_id)"/>
+      <param name="wait_for_transform_duration" type="double"   value="$(arg wait_for_transform)"/>
+        
+      <param name="Odom/Strategy"            type="string" value="$(arg strategy)"/> 
+      <param name="Odom/FeatureType"         type="string" value="$(arg feature)"/>  
+      <param name="OdomBow/NNType"           type="string" value="$(arg nn)"/>
+      <param name="Odom/EstimationType"      type="string" value="$(arg estimation)"/> 
+      <param name="Odom/MaxDepth"            type="string" value="$(arg max_depth)"/>  
+      <param name="Odom/MinInliers"          type="string" value="$(arg min_inliers)"/> 
+      <param name="Odom/InlierDistance"      type="string" value="$(arg inlier_distance)"/>       
+      <param name="OdomBow/LocalHistorySize" type="string" value="$(arg local_map)"/> 
+      <param name="Odom/FillInfoData"        type="string" value="true"/> 
+      <param name="Odom/VarianceFromInliersCount" type="string" value="$(arg variance_inliers)"/>  
+    </node>
+  
+
+    <!-- Visual SLAM (robot side) -->
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg rtabmap_args)" launch-prefix="$(arg launch_prefix)">
+
+      <param name="subscribe_depth"               type="bool"   value="true"/>
+      <param name="subscribe_laserScan"           type="bool"   value="$(arg subscribe_scan)"/>
+      <param name="frame_id"                      type="string" value="$(arg frame_id)"/>
+      <param name="wait_for_transform_duration" type="double" value="$(arg wait_for_transform)"/>
+      <param name="database_path"                 type="string" value="$(arg database_path)"/>
+
+      <remap from="rgb/image"       to="$(arg rgb_topic)"/>
+      <remap from="depth/image"     to="$(arg depth_registered_topic)"/>
+      <remap from="rgb/camera_info" to="$(arg camera_info_topic)"/>
+      <remap from="scan"            to="$(arg scan_topic)"/>
+      <remap unless="$(arg visual_odometry)" from="odom"  to="$(arg odom_topic)"/>
+      
+      <remap from="odom"  to="/odometry/filtered"/>
+      <param name="RGBD/PoseScanMatching"     type="string" value="true"/>
+
+      <param name="Rtabmap/TimeThr"           type="string" value="$(arg time_threshold)"/>
+      <param name="RGBD/OptimizeFromGraphEnd" type="string" value="$(arg optimize_from_last_node)"/>
+      <param name="LccReextract/Activated"    type="string" value="false" />
+      <param name="LccBow/MinInliers"         type="string" value="10"/>
+      <param name="LccBow/InlierDistance"     type="string" value="$(arg inlier_distance)"/>
+      <param name="LccBow/EstimationType"     type="string" value="$(arg estimation)"/> 
+      <param name="LccBow/VarianceFromInliersCount" type="string" value="$(arg variance_inliers)"/>
+      <param name="Mem/SaveDepth16Format"     type="string" value="$(arg convert_depth_to_mm)"/>
+      
+      <!-- when 2D scan is set -->
+      <param if="$(arg subscribe_scan)" name="RGBD/OptimizeSlam2D"          type="string" value="true"/>
+      <param if="$(arg subscribe_scan)" name="RGBD/LocalLoopDetectionSpace" type="string" value="true"/>
+      <param if="$(arg subscribe_scan)" name="LccIcp/Type"                  type="string" value="2"/> 
+      <param if="$(arg subscribe_scan)" name="LccIcp2/CorrespondenceRatio"  type="string" value="0.25"/>
+    </node>
+ </group>
+  
+
+  <!-- Visualization RVIZ -->
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="$(arg rviz_cfg)"/>
+  <!-- sync cloud with odometry and voxelize the point cloud (for fast visualization in rviz) -->
+  <node if="$(arg rviz)" pkg="nodelet" type="nodelet" name="standalone_nodelet"  args="manager" output="screen"/>
+  <node if="$(arg rviz)" pkg="nodelet" type="nodelet" name="data_odom_sync" args="load rtabmap_ros/data_odom_sync standalone_nodelet">
+    <remap from="rgb/image_in"        to="$(arg rgb_topic)"/>
+    <remap from="depth/image_in"      to="$(arg depth_registered_topic)"/>
+    <remap from="rgb/camera_info_in"  to="$(arg camera_info_topic)"/>
+    <remap if="$(arg visual_odometry)"     from="odom_in"  to="rtabmap/odom"/>
+    <remap unless="$(arg visual_odometry)" from="odom_in"  to="$(arg odom_topic)"/>
+    
+    <remap from="rgb/image_out"       to="data_odom_sync/image"/>
+    <remap from="depth/image_out"     to="data_odom_sync/depth"/>
+    <remap from="rgb/camera_info_out" to="data_odom_sync/camera_info"/>
+    <remap from="odom_out"            to="odom_sync"/>
+  </node>
+
+  <node if="$(arg rviz)" pkg="nodelet" type="nodelet" name="points_xyzrgb" args="load rtabmap_ros/point_cloud_xyzrgb standalone_nodelet">
+    <remap from="rgb/image"       to="data_odom_sync/image"/>
+    <remap from="depth/image"     to="data_odom_sync/depth"/>
+    <remap from="rgb/camera_info" to="data_odom_sync/camera_info"/>
+    <remap from="cloud"           to="voxel_cloud" />
+
+    <param name="decimation" type="double" value="2"/>
+    <param name="voxel_size" type="double" value="0.02"/>
+  </node>
+
+  <!-- obstacles detection -->
+  <node pkg="nodelet" type="nodelet" name="standalone_nodelet"  args="manager" output="screen"/>
+<!-- Create point cloud for the obstacles detection nodelet -->
+        <node pkg="nodelet" type="nodelet" name="points_xyz" args="load rtabmap_ros/point_cloud_xyz standalone_nodelet">
+            <remap from="depth/image"       to="/depth/image_raw"/>
+            <remap from="depth/camera_info" to="/camera/depth/camera_info"/>
+            <remap from="cloud"                 to="depth_cloud"/>
+            
+            <param name="voxel_size" type="double" value="0.05"/>
+            <param name="decimation" type="int" value="4"/>
+            <param name="max_depth" type="double" value="15"/>
+            <param name="noise_filter_radius" type="double" value="0.0" />
+            <param name="noise_filter_min_neighbors" type="int" value="5" />
+        </node>
+
+
+        <node pkg="nodelet" type="nodelet" name="obstacles_detection" args="load rtabmap_ros/obstacles_detection standalone_nodelet">
+                <remap from="cloud" to="depth_cloud" />
+
+            <param name="frame_id" type="string" value="base_link"/>        
+            <param name="normal_estimation_radius" type="double" value="0.1"/>
+            <param name="wait_for_transform" type="bool" value="true"/>
+
+            <!-- Minimum size of the segmented clusters to keep. -->
+            <param name="min_cluster_size" type="int" value="20"/>
+
+            
+            <param name="max_obstacles_height" type="double" value="0.0"/>
+        </node>
+
+</launch>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- load model name for zelmet -->
+	<arg name="model" value="$(find zelmet)/urdf/zelmet.urdf.xacro" />
+	
+	<!-- parse xacro into urdf -->
+	<param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" />
+
+	<!-- robot state publisher node -->
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+</launch>
