@@ -34,10 +34,6 @@
 
 
     <!-- Main body of Helmet -->
-    <joint name="visor_joint" type="fixed" >
-        <parent link="base_link" />
-        <child link="visor_link" />
-    </joint>
     <link name="base_link">
         <inertial>
             <mass value="0.162" />

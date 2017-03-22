@@ -9,8 +9,8 @@
     -->
 
 <launch>
-	<arg name="rviz" default="false" /> <!-- display robot in RViz -->
-	<arg name="useZed" default="true" /> <!-- display robot in RViz -->
+	<arg name="rviz" default="true" /> <!-- display robot in RViz -->
+	<arg name="useZed" default="false" /> <!-- display robot in RViz -->
 
     <group ns="zelmet">
     	<!-- URDF model with robot state publisher -->
