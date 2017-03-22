@@ -7,9 +7,6 @@ Panels:
         - /Global Options1
         - /Imu1
         - /Imu1/Axes properties1
-        - /PointCloud22
-        - /Imu2
-        - /Imu3
       Splitter Ratio: 0.5
     Tree Height: 775
   - Class: rviz/Selection
@@ -71,38 +68,8 @@ Visualization Manager:
       Class: rviz_imu_plugin/Imu
       Enabled: true
       Name: Imu
-      Topic: /chest/imu/data
+      Topic: /suit/chest/imu/data
       Unreliable: false
-      Value: true
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: RGB8
-      Decay Time: 0
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: PointCloud2
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.01
-      Style: Flat Squares
-      Topic: /zelmet/zed/point_cloud/cloud
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
       Value: true
     - Class: rviz/Axes
       Enabled: true
@@ -110,42 +77,6 @@ Visualization Manager:
       Name: Axes
       Radius: 0.005
       Reference Frame: <Fixed Frame>
-      Value: true
-    - Alpha: 1
-      Class: rviz/RobotModel
-      Collision Enabled: false
-      Enabled: true
-      Links:
-        All Links Enabled: true
-        Expand Joint Details: false
-        Expand Link Details: false
-        Expand Tree: false
-        Link Tree Style: Links in Alphabetic Order
-      Name: RobotModel
-      Robot Description: zelmet/robot_description
-      TF Prefix: ""
-      Update Interval: 0
-      Value: true
-      Visual Enabled: true
-    - Angle Tolerance: 0.01
-      Class: rviz/Odometry
-      Color: 0; 130; 195
-      Enabled: true
-      Keep: 1
-      Length: 0.5
-      Name: Odometry
-      Position Tolerance: 0.01
-      Topic: /slam/odometry/filtered
-      Value: true
-    - Angle Tolerance: 0.01
-      Class: rviz/Odometry
-      Color: 188; 188; 188
-      Enabled: true
-      Keep: 1
-      Length: 0.25
-      Name: Odometry
-      Position Tolerance: 0.01
-      Topic: /zelmet/zed/odom
       Value: true
     - Class: rviz/Image
       Enabled: false
@@ -159,36 +90,6 @@ Visualization Manager:
       Transport Hint: raw
       Unreliable: false
       Value: false
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: Intensity
-      Decay Time: 10
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
-      Min Intensity: 0
-      Name: PointCloud2
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.01
-      Style: Flat Squares
-      Topic: /slam/rtabmap/cloud_map
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: true
     - Acceleration properties:
         Acc. vector alpha: 1
         Acc. vector color: 255; 0; 0
@@ -208,7 +109,7 @@ Visualization Manager:
       Class: rviz_imu_plugin/Imu
       Enabled: true
       Name: Imu
-      Topic: /lower_right_arm/imu/data
+      Topic: /suit/lower_right_arm/imu/data
       Unreliable: false
       Value: true
     - Acceleration properties:
@@ -230,7 +131,7 @@ Visualization Manager:
       Class: rviz_imu_plugin/Imu
       Enabled: true
       Name: Imu
-      Topic: /upper_right_arm/imu/data
+      Topic: /suit/upper_right_arm/imu/data
       Unreliable: false
       Value: true
   Enabled: true
@@ -257,7 +158,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.192554
+      Distance: 0.187048
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1

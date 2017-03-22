@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<robot
+    xmlns:xacro="http://www.ros.org/wiki/xacro"
+    name="hbosuit">
+
+    <xacro:include filename="$(find hbo)/urdf/common.urdf.xacro" />
+    <xacro:include filename="$(find hbo)/urdf/sensors/um7.urdf.xacro" />
+
+    <!-- Note: Base Link is the back of the skull, right where the Zelmet strap is. -->
+
+    <!-- Physical Constant Macros -->
+    <xacro:property name="M_PI"    value="3.1415926535897931" />
+    <xacro:property name="M_41deg" value="0.7155849933176751265387132150803312" />
+    <xacro:property name="M_16deg" value="0.279252680319092732307790522958" />
+
+    <!-- IMU placement relative to base_link --> 
+    <xacro:property name="imu_x" value=".0381" /> 
+    <xacro:property name="imu_y" value="0" />
+    <xacro:property name="imu_z" value=".1016" />
+
+    <xacro:property name="imu_roll" value="0" /> 
+    <xacro:property name="imu_pitch" value="-${M_41deg}" />
+    <xacro:property name="imu_yaw" value="0" />
+
+     <!-- ZED placement relative to base_link -->
+    <xacro:property name="zed_x" value="0.2286" /> 
+    <xacro:property name="zed_y" value="0.0" />
+    <xacro:property name="zed_z" value="0.0508" />
+
+    <xacro:property name="zed_roll" value="0" /> 
+    <xacro:property name="zed_pitch" value="${M_16deg}" />
+    <xacro:property name="zed_yaw" value="0" /> 
+
+
+    <!-- Main body of Helmet -->
+    <link name="base_link">
+        <inertial>
+            <mass value="0.162" />
+            <origin xyz="0 0 0" /> 
+            <inertia  ixx="0.2" ixy="0.0"  ixz="0.0"  iyy="0.2"  iyz="0.0"  izz="0.2" />
+        </inertial>
+        <visual>
+            <origin xyz="0.1016 0 0.0508" rpy="0 0 0" />
+            <geometry>
+                 <cylinder radius="0.1016" length="0.1016" />
+             </geometry>
+            <material name="Blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0.1016 0 0.0508" rpy="0 0 0" />
+            <geometry>
+                 <cylinder radius="0.1016" length="0.1016" />
+             </geometry>
+        </collision>
+    </link>
+
+    <!-- Visor -->
+    <joint name="visor_joint" type="fixed" >
+        <parent link="base_link" />
+        <child link="visor_link" />
+    </joint>
+	<link name="visor_link">
+        <visual>
+            <origin xyz="0.1778 0 0.0127" rpy="0 0 0" />
+            <geometry>
+                 <box size=".1016 .1651 .0254" />
+             </geometry>
+            <material name="Blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0.1778 0 0.0127" rpy="0 0 0" />
+            <geometry>
+                 <box size=".1016 .1651 .0254" />
+             </geometry>
+        </collision>
+    </link>
+
+    <!-- IMU -->
+    <xacro:um7_imu_v0
+        name="imu" 
+        parent="base_link">
+        <origin 
+            xyz="${imu_x} ${imu_y} ${imu_z}" 
+            rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
+    </xacro:um7_imu_v0>
+
+</robot>

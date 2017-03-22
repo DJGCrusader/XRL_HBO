@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="human">
+  <link name="chest">
+	<visual>
+	  <geometry>
+	    <box size= ".4572 1.016 .2413">
+	  </geometry>
+	</visual>
+   </link>
+
+

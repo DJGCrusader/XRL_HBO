@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<!-- zelmet.launch
+     Launch file for Zed Helmet
+
+     @author  Daniel J. Gonzalez  <dgonz@mit.edu>
+     
+     @date    2016-10-07
+    -->
+
+<launch>
+	<arg name="rviz" default="true" /> <!-- display robot in RViz -->
+	
+    <group ns="suit">
+
+    	<!-- URDF model with robot state publisher -->
+    	<include file="$(find hbo)/launch/xacro.launch" >
+    	</include>
+
+		<group ns="chest">
+			<!--UM7 IMU-->
+			<include file="$(find hbo)/launch/chest.launch" >
+				<arg name="frame_id" default="imu_link"/>
+			</include>
+		    <!--<node pkg="rosservice" type="rosservice" name="IMU_Reset" args="call /zelmet/reset true true true"/>-->
+		</group>
+
+		<group ns="upper_right_arm">
+			<!--UM7 IMU-->
+			<include file="$(find hbo)/launch/upper_right_arm.launch" >
+				<arg name="frame_id" default="imu_link"/>
+			</include>
+		    <!--<node pkg="rosservice" type="rosservice" name="IMU_Reset" args="call /zelmet/reset true true true"/>-->
+		</group>
+		<group ns="lower_right_arm">
+    	<!--UM7 IMU-->
+    	<include file="$(find hbo)/launch/lower_right_arm.launch" >
+    		<arg name="frame_id" default="imu_link"/>
+    	</include>
+        <!--<node pkg="rosservice" type="rosservice" name="IMU_Reset" args="call /zelmet/reset true true true"/>-->
+		</group>
+    </group>
+
+	<!-- RViz -->
+	<include if="$(arg rviz)" file="$(find hbo)/launch/rviz.launch" >
+		<arg name="config" default="hbo_3imus"/>
+	</include>
+</launch>
