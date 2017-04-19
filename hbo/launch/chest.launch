@@ -6,11 +6,8 @@
      @date    2016-10-7
 -->
 <launch>
-	<arg name="frame_id" default="imu_link"/>
-<!--
-    <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg camera)_tracked_link1"
-    	args="0 0 0 0 0 0 1 $(arg frame_id) $(arg tf_prefix)/$(arg camera)_tracked_frame" />
--->
+	<arg name="frame_id" default="origin_link"/>
+
 	<node pkg="um7" type="um7_driver" name="chest" output="screen">
 		<param name="port" value="/dev/ttyUSB0"/>
 		<param name="baud" value="115200"/> 
@@ -20,5 +17,6 @@
 		<param name="zero_gyros" value="true"/>
 		<param name="covariance" value="0 0 0 0 0 0 0 0 0"/>
 	</node>
+	
 </launch>
 <!--Reset.srv bool zero_gyros bool reset_ekf bool set_mag_ref-->

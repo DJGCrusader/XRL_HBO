@@ -4,7 +4,7 @@
     name="hbosuit">
 
     <xacro:include filename="$(find hbo)/urdf/common.urdf.xacro" />
-    <xacro:include filename="$(find hbo)/urdf/sensors/um7.urdf.xacro" />
+    <xacro:include filename="$(find hbo)/urdf/body/upper_body_imu.urdf.xacro" />
 
     <!-- Note: Base Link is the back of the skull, right where the Zelmet strap is. -->
 
@@ -13,75 +13,84 @@
     <xacro:property name="M_41deg" value="0.7155849933176751265387132150803312" />
     <xacro:property name="M_16deg" value="0.279252680319092732307790522958" />
 
-    <!-- IMU placement relative to base_link --> 
-    <xacro:property name="imu_x" value=".0381" /> 
+	<!-- IMU placement relative to chest --> 
+    <xacro:property name="imu_x" value="0" /> 
     <xacro:property name="imu_y" value="0" />
-    <xacro:property name="imu_z" value=".1016" />
+    <xacro:property name="imu_z" value="0" />
 
     <xacro:property name="imu_roll" value="0" /> 
-    <xacro:property name="imu_pitch" value="-${M_41deg}" />
+    <xacro:property name="imu_pitch" value="0" />
     <xacro:property name="imu_yaw" value="0" />
 
-     <!-- ZED placement relative to base_link -->
-    <xacro:property name="zed_x" value="0.2286" /> 
-    <xacro:property name="zed_y" value="0.0" />
-    <xacro:property name="zed_z" value="0.0508" />
+ 	<!-- Body dimensions --> 
+    <xacro:property name="w_shoulder" value=".3048" /> 
+    <xacro:property name="l_upper_arm" value=".3048" />
+    <xacro:property name="l_forearm" value=".2667" />
+	<xacro:property name="r_upper_arm" value=".0424" />
+    <xacro:property name="r_forearm" value="0.03436155221" />
+	<xacro:property name="l_chest" value="0.1016" />
 
-    <xacro:property name="zed_roll" value="0" /> 
-    <xacro:property name="zed_pitch" value="${M_16deg}" />
-    <xacro:property name="zed_yaw" value="0" /> 
-
-
-    <!-- Main body of Helmet -->
-    <link name="base_link">
-        <inertial>
-            <mass value="0.162" />
-            <origin xyz="0 0 0" /> 
-            <inertia  ixx="0.2" ixy="0.0"  ixz="0.0"  iyy="0.2"  iyz="0.0"  izz="0.2" />
-        </inertial>
-        <visual>
-            <origin xyz="0.1016 0 0.0508" rpy="0 0 0" />
-            <geometry>
-                 <cylinder radius="0.1016" length="0.1016" />
-             </geometry>
-            <material name="Blue"/>
-        </visual>
-        <collision>
-            <origin xyz="0.1016 0 0.0508" rpy="0 0 0" />
-            <geometry>
-                 <cylinder radius="0.1016" length="0.1016" />
-             </geometry>
-        </collision>
+<!-- Chest -->
+    <link name="origin_link">
     </link>
-
-    <!-- Visor -->
-    <joint name="visor_joint" type="fixed" >
-        <parent link="base_link" />
-        <child link="visor_link" />
-    </joint>
-	<link name="visor_link">
-        <visual>
-            <origin xyz="0.1778 0 0.0127" rpy="0 0 0" />
-            <geometry>
-                 <box size=".1016 .1651 .0254" />
-             </geometry>
-            <material name="Blue"/>
-        </visual>
-        <collision>
-            <origin xyz="0.1778 0 0.0127" rpy="0 0 0" />
-            <geometry>
-                 <box size=".1016 .1651 .0254" />
-             </geometry>
-        </collision>
-    </link>
-
-    <!-- IMU -->
+	<!-- IMU -->
     <xacro:um7_imu_v0
-        name="imu" 
-        parent="base_link">
+        name="imu_chest" 
+		parent ="origin_link"
+		child ="chest_link">
         <origin 
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
     </xacro:um7_imu_v0>
+
+    <!-- Chest -->
+    <link name="chest_link">
+        <visual>
+            <origin xyz="0 0 ${w_shoulder/4}" rpy="0 0 0" />
+            <geometry>
+                 <box size="${w_shoulder} ${w_shoulder/2} ${w_shoulder/2}" length="${l_chest}" />
+             </geometry>
+            <material name="DarkGrey"/>
+        </visual>
+    </link>
+    <!-- IMU -->
+    <xacro:um7_imu_v0
+        name="imu_upper_right_arm"
+		parent ="chest_link"
+		child ="right_upper_arm_link">
+            <origin xyz="${w_shoulder/2} 0 .1" rpy="0 0 0" />
+    </xacro:um7_imu_v0> 
+	<!-- Upper arm -->
+	<link name="right_upper_arm_link">
+        <visual>
+            <origin xyz="${l_upper_arm/2} 0 0" rpy="0 ${M_PI/2} 0" />
+            <geometry>
+                 <cylinder radius="${r_upper_arm}" length="${l_upper_arm}" />
+             </geometry>
+            <material name="DarkGrey"/>
+        </visual>
+   </link> 
+
+    <!-- IMU -->
+    <xacro:um7_imu_v0
+        name="imu_right_forearm" 
+		parent ="right_upper_arm_link"
+		child = "right_forearm_link">
+        <origin 
+            xyz="${l_upper_arm} 0 0" rpy="0 0 0" /> 
+    </xacro:um7_imu_v0> 0
+
+	<!-- Forearm -->
+	<link name="right_forearm_link">
+        <visual>
+           <origin xyz="${l_forearm/2} 0 0" rpy="0 ${M_PI/2} 0" />
+            <geometry>
+                 <cylinder radius="${r_forearm}" length="${l_forearm}" />
+             </geometry>
+            <material name="DarkGrey"/>
+        </visual>
+    </link> 
+
+
 
 </robot>
