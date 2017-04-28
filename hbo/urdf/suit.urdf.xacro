@@ -74,7 +74,7 @@
 
     <xacro:um7_imu_v0
         name="imu_chest" 
-        parent="chest_link">
+        parent="origin_link">
         <origin 
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
@@ -116,7 +116,7 @@
     <!-- IMU -->
     <xacro:um7_imu_v0
         name="imu_upper_right_arm" 
-        parent="right_upper_arm_link">
+        parent="origin_link">
         <origin 
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
@@ -144,7 +144,7 @@
     <!-- IMU -->
     <xacro:um7_imu_v0
         name="imu_right_forearm" 
-        parent="right_forearm_link">
+        parent="origin_link">
         <origin 
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 

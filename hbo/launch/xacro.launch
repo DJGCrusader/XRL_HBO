@@ -5,18 +5,11 @@
 	
 	<!-- parse xacro into urdf -->
 	<param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" />
-	<param name="use_gui" value="false"/>
-	<!-- <param name="source_list" value="/suit/chest/imu/rpy" /> -->
-	<!-- Need to set source_list to be the list of JointState messages, which we must get fom IMU states -->
+	<!-- <param name="use_gui" value="true"/> -->
 
 	<!-- robot state publisher node -->
 	<node name="suit_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
-	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-    <rosparam param="source_list">["/suit/chest/imu/rpy","/suit/upper_right_arm/imu/rpy","/suit/lower_right_arm/imu/rpy"]</rosparam>
-    <!-- http://gazebosim.org/tutorials?tut=drcsim_ros_cmds&cat= -->
-    <!-- http://answers.ros.org/question/246553/how-to-publish-real-robot-arm-joint_states-by-ros/ -->
-    <!-- http://answers.ros.org/question/213075/publish-joint_state-with-python-to-rviz/ -->
-	</node>
+	<!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/> -->
     <!--<node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 0.1 imu_chest_joint chest_link 100" />-->
 </launch>
