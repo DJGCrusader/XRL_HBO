@@ -11,9 +11,9 @@
     <!-- Physical Constant Macros -->
     <xacro:property name="M_PI"    value="3.1415926535897931" />
     <xacro:property name="M_41deg" value="0.7155849933176751265387132150803312" />
-    <xacro:property name="M_16deg" value="0.279252680319092732307790522958" />
+    <xacro:property name="M_16deg" value="0.2792526803190927a32307790522958" />
 
-	<!-- IMU placement relative to chest --> 
+    <!-- IMU placement relative to chest --> 
     <xacro:property name="imu_x" value="0" /> 
     <xacro:property name="imu_y" value="0" />
     <xacro:property name="imu_z" value="0" />
@@ -22,66 +22,116 @@
     <xacro:property name="imu_pitch" value="0" />
     <xacro:property name="imu_yaw" value="0" />
 
- 	<!-- Body dimensions --> 
+    <!-- Body dimensions --> 
     <xacro:property name="w_shoulder" value=".3048" /> 
     <xacro:property name="l_upper_arm" value=".3048" />
     <xacro:property name="l_forearm" value=".2667" />
-	<xacro:property name="r_upper_arm" value=".0424" />
+    <xacro:property name="r_upper_arm" value=".0424" />
     <xacro:property name="r_forearm" value="0.03436155221" />
-	<xacro:property name="l_chest" value="0.1016" />
-
-<!-- Chest -->
-    <link name="origin_link">
-    </link>
-	<!-- IMU -->
-    <xacro:um7_imu_v0
-        name="imu_chest" 
-		parent ="origin_link"
-		child ="chest_link">
-        <origin 
-            xyz="${imu_x} ${imu_y} ${imu_z}" 
-            rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
-    </xacro:um7_imu_v0>
+    <xacro:property name="l_chest" value="0.1016" />
 
     <!-- Chest -->
+    <link name="origin_link">
+    </link>
+
+     <joint name="chest_yaw" type="continuous">
+         <parent link="origin_link"/>
+         <child link="chest_yaw_link"/>
+         <axis xyz="0 0 1"/>
+         <origin xyz="0 0 0"/>
+    </joint>
+
+    <link name="chest_yaw_link">
+    </link>
+
+    <joint name="chest_pitch" type="continuous">
+         <parent link="chest_yaw_link"/>
+         <child link="chest_pitch_link"/>
+         <axis xyz="0 1 0"/>
+         <origin xyz="0 0 0"/>
+    </joint> 
+
+    <link name="chest_pitch_link">
+    </link>
+
+    <joint name="chest_roll" type="continuous">
+         <parent link="chest_pitch_link"/>
+         <child link="chest_link"/>
+         <axis xyz="1 0 0"/>
+         <origin xyz="0 0 0"/>
+    </joint>
+
     <link name="chest_link">
         <visual>
-            <origin xyz="0 0 ${w_shoulder/4}" rpy="0 0 0" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                 <box size="${w_shoulder} ${w_shoulder/2} ${w_shoulder/2}" length="${l_chest}" />
+                 <box size="${w_shoulder/2} ${w_shoulder} ${w_shoulder/2}" length="${l_chest}" />
              </geometry>
             <material name="DarkGrey"/>
         </visual>
     </link>
     <!-- IMU -->
+
     <xacro:um7_imu_v0
-        name="imu_upper_right_arm"
-		parent ="chest_link"
-		child ="right_upper_arm_link">
-            <origin xyz="${w_shoulder/2} 0 .1" rpy="0 0 0" />
+        name="imu_chest" 
+        parent="chest_link">
+        <origin 
+            xyz="${imu_x} ${imu_y} ${imu_z}" 
+            rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
     </xacro:um7_imu_v0> 
-	<!-- Upper arm -->
-	<link name="right_upper_arm_link">
+
+    <!-- Shoulder -->
+     <joint name="right_shoulder_yaw" type="continuous">
+         <parent link="chest_link"/>
+         <child link="rshoulder_yaw_link"/>
+         <axis xyz="0 0 1"/>
+         <origin xyz="0 ${-w_shoulder/2} 0" rpy="0 0 ${-M_PI/2}"/>
+       </joint>
+    <link name="rshoulder_yaw_link">
+    </link>
+    <joint name="right_shoulder_pitch" type="continuous">
+         <parent link="rshoulder_yaw_link"/>
+         <child link="rshoulder_pitch_link"/>
+         <axis xyz="0 1 0"/>
+         <origin xyz="0 0 0"/>
+       </joint> 
+    <link name="rshoulder_pitch_link">
+    </link>
+    <joint name="right_shoulder_roll" type="continuous">
+         <parent link="rshoulder_pitch_link"/>
+         <child link="right_upper_arm_link"/>
+         <axis xyz="1 0 0"/>
+         <origin xyz="0 0 0"/>
+       </joint>
+    <!-- Upper arm -->
+    <link name="right_upper_arm_link">
         <visual>
-            <origin xyz="${l_upper_arm/2} 0 0" rpy="0 ${M_PI/2} 0" />
+            <origin xyz="${w_shoulder/2} 0 0" rpy="0 ${M_PI/2} 0" />
             <geometry>
                  <cylinder radius="${r_upper_arm}" length="${l_upper_arm}" />
              </geometry>
             <material name="DarkGrey"/>
         </visual>
    </link> 
-
     <!-- IMU -->
     <xacro:um7_imu_v0
-        name="imu_right_forearm" 
-		parent ="right_upper_arm_link"
-		child = "right_forearm_link">
+        name="imu_upper_right_arm" 
+        parent="right_upper_arm_link">
         <origin 
-            xyz="${l_upper_arm} 0 0" rpy="0 0 0" /> 
-    </xacro:um7_imu_v0> 0
+            xyz="${imu_x} ${imu_y} ${imu_z}" 
+            rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
+    </xacro:um7_imu_v0> 
 
-	<!-- Forearm -->
-	<link name="right_forearm_link">
+    <!-- Elbow -->
+    <joint name="right_elbow" type="continuous">
+         <parent link="right_upper_arm_link"/>
+         <child link="right_forearm_link"/>
+         <axis xyz="0 1 0"/>
+         <origin xyz="${l_upper_arm} 0 0"/>
+    </joint>
+
+    <!-- Forearm -->
+    <link name="right_forearm_link">
         <visual>
            <origin xyz="${l_forearm/2} 0 0" rpy="0 ${M_PI/2} 0" />
             <geometry>
@@ -91,6 +141,14 @@
         </visual>
     </link> 
 
+    <!-- IMU -->
+    <xacro:um7_imu_v0
+        name="imu_right_forearm" 
+        parent="right_forearm_link">
+        <origin 
+            xyz="${imu_x} ${imu_y} ${imu_z}" 
+            rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
+    </xacro:um7_imu_v0> 
 
 
 </robot>

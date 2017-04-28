@@ -3,7 +3,8 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Global Options1
       Splitter Ratio: 0.5
     Tree Height: 463
   - Class: rviz/Selection
@@ -134,6 +135,14 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        chest_pitch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        chest_yaw_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         imu_chest_link:
           Alpha: 1
           Show Axes: false
@@ -163,6 +172,14 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        rshoulder_pitch_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        rshoulder_yaw_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -172,7 +189,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: chest_link
+    Fixed Frame: origin_link
     Frame Rate: 100
   Name: root
   Tools:
@@ -205,10 +222,10 @@ Visualization Manager:
         Z: 0.0143708
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.749797
+      Pitch: 0.044797
       Target Frame: map
       Value: Orbit (rviz)
-      Yaw: 5.7181
+      Yaw: 4.7081
     Saved:
       - Class: rviz/Orbit
         Distance: 10

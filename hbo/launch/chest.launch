@@ -6,7 +6,7 @@
      @date    2016-10-7
 -->
 <launch>
-	<arg name="frame_id" default="origin_link"/>
+	<arg name="frame_id" default="imu_chest_link"/>
 
 	<node pkg="um7" type="um7_driver" name="chest" output="screen">
 		<param name="port" value="/dev/ttyUSB0"/>

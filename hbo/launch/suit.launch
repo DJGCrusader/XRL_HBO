@@ -10,7 +10,9 @@
 
 <launch>
 	<arg name="rviz" default="true" /> <!-- display robot in RViz -->
-	
+	<!-- URDF model with robot state publisher -->
+    	<include file="$(find hbo)/launch/xacro.launch" >
+    	</include>
     <group ns="suit">
 
 		<group ns="chest">
@@ -28,9 +30,7 @@
 		</group>
     </group>
 
-	    	<!-- URDF model with robot state publisher -->
-    	<include file="$(find hbo)/launch/xacro.launch" >
-    	</include>
+	    	
 
 	<!-- RViz -->
 	<include if="$(arg rviz)" file="$(find hbo)/launch/rviz.launch" >
