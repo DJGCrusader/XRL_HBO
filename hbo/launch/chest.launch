@@ -15,7 +15,7 @@
 		<param name="mag_updates" value="true"/> 
 		<param name="quat_mode" value="true"/>
 		<param name="zero_gyros" value="true"/>
-		<param name="covariance" value="0 0 0 0 0 0 0 0 0"/>
+		<!-- <param name="covariance" value="0 0 0 0 0 0 0 0 0"/> -->
 	</node>
 	
 </launch>
