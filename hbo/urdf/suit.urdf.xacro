@@ -149,6 +149,74 @@
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
     </xacro:um7_imu_v0> 
+<!-- Shoulder -->
+     <joint name="left_shoulder_yaw" type="continuous">
+         <parent link="chest_link"/>
+         <child link="lshoulder_yaw_link"/>
+         <axis xyz="0 0 1"/>
+         <origin xyz="0 ${w_shoulder/2} 0" rpy="0 0 ${-M_PI/2}"/>
+       </joint>
+    <link name="lshoulder_yaw_link">
+    </link>
+    <joint name="left_shoulder_pitch" type="continuous">
+         <parent link="lshoulder_yaw_link"/>
+         <child link="lshoulder_pitch_link"/>
+         <axis xyz="0 1 0"/>
+         <origin xyz="0 0 0"/>
+       </joint> 
+    <link name="lshoulder_pitch_link">
+    </link>
+    <joint name="left_shoulder_roll" type="continuous">
+         <parent link="lshoulder_pitch_link"/>
+         <child link="left_upper_arm_link"/>
+         <axis xyz="1 0 0"/>
+         <origin xyz="0 0 0"/>
+       </joint>
+    <!-- Upper arm -->
+    <link name="left_upper_arm_link">
+        <visual>
+            <origin xyz="${-w_shoulder/2} 0 0" rpy="0 ${M_PI/2} 0" />
+            <geometry>
+                 <cylinder radius="${r_upper_arm}" length="${l_upper_arm}" />
+             </geometry>
+            <material name="DarkGrey"/>
+        </visual>
+   </link> 
+    <!-- IMU -->
+    <xacro:um7_imu_v0
+        name="imu_upper_left_arm" 
+        parent="origin_link">
+        <origin 
+            xyz="${imu_x} ${imu_y} ${imu_z}" 
+            rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
+    </xacro:um7_imu_v0> 
 
+    <!-- Elbow -->
+    <joint name="left_elbow" type="continuous">
+         <parent link="left_upper_arm_link"/>
+         <child link="left_forearm_link"/>
+         <axis xyz="0 1 0"/>
+         <origin xyz="${-l_upper_arm} 0 0"/>
+    </joint>
+
+    <!-- Forearm -->
+    <link name="left_forearm_link">
+        <visual>
+           <origin xyz="${-l_forearm/2} 0 0" rpy="0 ${M_PI/2} 0" />
+            <geometry>
+                 <cylinder radius="${r_forearm}" length="${l_forearm}" />
+             </geometry>
+            <material name="DarkGrey"/>
+        </visual>
+    </link> 
+
+    <!-- IMU -->
+    <xacro:um7_imu_v0
+        name="imu_left_forearm" 
+        parent="origin_link">
+        <origin 
+            xyz="${imu_x} ${imu_y} ${imu_z}" 
+            rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
+    </xacro:um7_imu_v0> 
 
 </robot>

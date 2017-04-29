@@ -18,13 +18,13 @@ def IMUParser():
     hello_str.header.stamp = rospy.Time.now()
     hello_str.name = ['chest_yaw', 'chest_pitch', 'chest_roll',
                       'right_shoulder_yaw', 'right_shoulder_pitch', 'right_shoulder_roll',
-                      'right_elbow']
+                      'right_elbow','left_shoulder_yaw','left_shoulder_pitch','left_shoulder_roll','left_elbow']
     subTo = ['/suit/chest/imu/rpy', '/suit/upper_right_arm/imu/rpy', '/suit/lower_right_arm/imu/rpy']
     rospy.Subscriber(subTo[0], Vector3Stamped, IMUChestCallback)
     rospy.Subscriber(subTo[1], Vector3Stamped, IMURUpperArmCallback)
     rospy.Subscriber(subTo[2], Vector3Stamped, IMURLowerArmCallback)
 
-    hello_str.position = [IMUState[2], IMUState[1], IMUState[0], IMUState[5], IMUState[4], IMUState[3], IMUState[7]]
+    hello_str.position = [IMUState[2], IMUState[1], IMUState[0], IMUState[5], IMUState[4], IMUState[3], IMUState[7],0,0,0,0]
     hello_str.velocity = []
     hello_str.effort = []
     while not rospy.is_shutdown():
@@ -33,8 +33,8 @@ def IMUParser():
         hello_str.header.stamp = rospy.Time.now()
         hello_str.name = ['chest_yaw', 'chest_pitch', 'chest_roll',
                           'right_shoulder_yaw', 'right_shoulder_pitch', 'right_shoulder_roll',
-                          'right_elbow']
-        hello_str.position = [IMUState[2], IMUState[1], IMUState[0], IMUState[5], IMUState[4], IMUState[3], IMUState[7]]
+                          'right_elbow','left_shoulder_yaw','left_shoulder_pitch','left_shoulder_roll','left_elbow']
+        hello_str.position = [IMUState[2], IMUState[1], IMUState[0], IMUState[5], IMUState[4], IMUState[3], IMUState[7],0,0,0,0]
         hello_str.velocity = []
         hello_str.effort = []
         pub.publish(hello_str)
