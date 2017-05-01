@@ -5,6 +5,7 @@
 
     <xacro:include filename="$(find hbo)/urdf/common.urdf.xacro" />
     <xacro:include filename="$(find hbo)/urdf/body/upper_body_imu.urdf.xacro" />
+    <xacro:include filename="$(find zelmet)/urdf/zelmet.urdf.xacro" />
 
     <!-- Note: Base Link is the back of the skull, right where the Zelmet strap is. -->
 
@@ -70,15 +71,39 @@
             <material name="DarkGrey"/>
         </visual>
     </link>
-    <!-- IMU -->
 
+    <!-- IMU -->
     <xacro:um7_imu_v0
         name="imu_chest" 
-        parent="origin_link">
+        parent="chest_link">
         <origin 
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
     </xacro:um7_imu_v0> 
+
+    <joint name="helmet_yaw" type="continuous">
+         <parent link="chest_link"/>
+         <child link="helmet_yaw_link"/>
+         <axis xyz="0 0 1"/>
+         <origin xyz="0 0 .2"/>
+    </joint>
+    <link name="helmet_yaw_link">
+    </link>
+    <joint name="helmet_pitch" type="continuous">
+         <parent link="helmet_yaw_link"/>
+         <child link="helmet_pitch_link"/>
+         <axis xyz="0 1 0"/>
+         <origin xyz="0 0 0"/>
+    </joint>
+    <link name="helmet_pitch_link">
+    </link>
+    <joint name="helmet_roll" type="continuous">
+         <parent link="helmet_pitch_link"/>
+         <child link="helmet_link"/>
+         <axis xyz="1 0 0"/>
+         <origin xyz="0 0 0"/>
+    </joint>
+    <xacro:zelmet />
 
     <!-- Shoulder -->
      <joint name="right_shoulder_yaw" type="continuous">
@@ -116,7 +141,7 @@
     <!-- IMU -->
     <xacro:um7_imu_v0
         name="imu_upper_right_arm" 
-        parent="origin_link">
+        parent="right_upper_arm_link">
         <origin 
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 
@@ -144,7 +169,7 @@
     <!-- IMU -->
     <xacro:um7_imu_v0
         name="imu_right_forearm" 
-        parent="origin_link">
+        parent="right_forearm_link">
         <origin 
             xyz="${imu_x} ${imu_y} ${imu_z}" 
             rpy="${imu_roll} ${imu_pitch} ${imu_yaw}" /> 

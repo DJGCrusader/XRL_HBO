@@ -9,19 +9,19 @@
     -->
 
 <launch>
-	<arg name="rviz" default="true" /> <!-- display robot in RViz -->
+	<!-- <arg name="rviz" default="true" /> --> <!-- display robot in RViz -->
 	<arg name="useZed" default="false" /> <!-- display robot in RViz -->
 
     <group ns="zelmet">
     	<!-- URDF model with robot state publisher -->
-    	<include file="$(find zelmet)/launch/xacro.launch" >
-    	</include>
+    	<!-- <include file="$(find zelmet)/launch/xacro.launch" >
+    	</include> -->
 
     	<!--UM7 IMU-->
     	<include file="$(find zelmet)/launch/sensors/um7.launch" >
-    		<arg name="frame_id" default="imu_link"/>
+    		<arg name="frame_id" default="imu_zelmet_link"/>
     	</include>
-        <!--<node pkg="rosservice" type="rosservice" name="IMU_Reset" args="call /zelmet/reset true true true"/>-->
+        <!-- <node pkg="rosservice" type="rosservice" name="IMU_Reset" args="call /zelmet/reset true true true"/> -->
 
     	<!-- launch ZED sensor-->
     	<include if="$(arg useZed)" file="$(find zelmet)/launch/sensors/zed.launch"/>
@@ -29,18 +29,17 @@
 
     <group ns="slam">
         <!--robot-localization-->
-        <include file="$(find zelmet)/launch/slam/zelmet-loco.launch" >
-        </include>
+<!--         <include file="$(find zelmet)/launch/slam/zelmet-loco.launch" >
+        </include> -->
 
         <!--rtabmap-->
-        
-        <include file="$(find zelmet)/launch/slam/zelmet-rtabmap.launch" >
-        </include>
+<!--         <include file="$(find zelmet)/launch/slam/zelmet-rtabmap.launch" >
+        </include> -->
         
     </group>
 
 	<!-- RViz -->
-	<include if="$(arg rviz)" file="$(find hbo)/launch/rviz.launch" >
+	<!-- <include if="$(arg rviz)" file="$(find hbo)/launch/rviz.launch" >
 		<arg name="config" default="hbo"/>
-	</include>
+	</include> -->
 </launch>

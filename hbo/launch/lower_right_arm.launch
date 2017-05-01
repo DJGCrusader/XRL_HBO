@@ -9,7 +9,7 @@
 	<arg name="frame_id" default="imu_right_forearm_link"/>
 
 	<node pkg="um7" type="um7_driver" name="lower_right_arm" output="screen">
-		<param name="port" value="/dev/ttyUSB2"/>
+		<param name="port" value="/dev/ttyUSB3"/>
 		<param name="baud" value="115200"/> 
 		<param name="frame_id" value="$(arg frame_id)"/>
 		<param name="mag_updates" value="true"/> 

@@ -12,6 +12,8 @@
 
 	<arg name="rviz" default="true" /> <!-- display robot in RViz -->
 
+    <include file="$(find zelmet)/launch/zelmet.launch" />
+
     <group ns="suit">
 
 		<group ns="chest">
@@ -35,9 +37,9 @@
 
 	<!-- RViz -->
 	<include if="$(arg rviz)" file="$(find hbo)/launch/rviz.launch" >
-		<arg name="config" default="hbo_3imus"/>
+		<arg name="config" default="hbo_zelmet_4imus"/>
 	</include>
-    
+
     <node pkg="hbo" name="IMUParser" type="IMUParser.py"/>
     
 </launch>
