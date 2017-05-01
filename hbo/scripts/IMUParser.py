@@ -40,7 +40,6 @@ def IMUParser():
                                  IMUState[5], IMUState[4], IMUState[3],
                                   IMUState[8]- IMUState[5], IMUState[7]- IMUState[4], IMUState[6]- IMUState[3],
                                    IMUState[9]]
-        
         hello_str.velocity = []
         hello_str.effort = []
         pub.publish(hello_str)
